@@ -1,26 +1,31 @@
+import { UploadFlow } from "@/components/UploadFlow";
 import { UrduText } from "@/components/UrduText";
 
 export default function Home() {
   return (
-    <div className="max-w-2xl mx-auto px-4 py-16 text-center">
-      <h1
-        className="text-4xl mb-3"
-        style={{ fontFamily: "var(--font-display)", color: "var(--color-ink)" }}
+    <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
+
+      {/* Persistent disclaimer — always on screen */}
+      <div
+        className="rounded-xl border px-4 py-3"
+        style={{
+          backgroundColor: "var(--color-paper-deep)",
+          borderColor: "var(--color-hairline)",
+        }}
       >
-        Parchi
-      </h1>
-      <UrduText as="p" className="text-2xl mb-6">
-        پرچی
-      </UrduText>
-      <p className="text-base mb-2" style={{ color: "var(--color-ink-soft)" }}>
-        Photograph your prescription. Understand what each medicine is generally for.
-      </p>
-      <p className="text-xs mt-8" style={{ color: "var(--color-ink-soft)" }}>
-        Coming soon —{" "}
-        <a href="/style" className="underline" style={{ color: "var(--color-green)" }}>
-          view design system
-        </a>
-      </p>
+        <p className="text-xs font-semibold" style={{ color: "var(--color-coral)" }}>
+          Not medical advice
+        </p>
+        <p className="text-xs mt-0.5 leading-relaxed" style={{ color: "var(--color-ink-soft)" }}>
+          Parchi explains what medicines are generally used for. Always confirm with your pharmacist or doctor.
+        </p>
+        <UrduText as="p" className="text-xs mt-1 leading-loose" style={{ color: "var(--color-ink-soft)" }}>
+          یہ طبی مشورہ نہیں ہے۔ اپنے فارماسسٹ یا ڈاکٹر سے تصدیق کریں۔
+        </UrduText>
+      </div>
+
+      {/* Interactive upload + results */}
+      <UploadFlow />
     </div>
   );
 }

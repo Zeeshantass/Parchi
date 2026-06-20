@@ -1,5 +1,4 @@
 import type { NextConfig } from "next";
-import path from "path";
 
 const isCapacitorBuild = process.env.BUILD_TARGET === "capacitor";
 
@@ -11,7 +10,9 @@ const nextConfig: NextConfig = {
     images: { unoptimized: true },
   }),
   turbopack: {
-    root: path.resolve(__dirname),
+    // Fix: a package-lock.json in the user home directory makes Turbopack
+    // infer the wrong workspace root. process.cwd() is always the project root.
+    root: process.cwd(),
   },
 };
 
