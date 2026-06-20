@@ -26,6 +26,24 @@ async function compressImage(file: File, maxPx = 1600): Promise<Blob> {
   });
 }
 
+/* Three animated dots for the loading label */
+function LoadingDots() {
+  return (
+    <span className="inline-flex gap-1 items-center">
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          className="animate-blink w-1.5 h-1.5 rounded-full inline-block"
+          style={{
+            backgroundColor: "var(--color-green)",
+            animationDelay: `${i * 0.22}s`,
+          }}
+        />
+      ))}
+    </span>
+  );
+}
+
 export function UploadFlow() {
   const cameraRef = useRef<HTMLInputElement>(null);
   const galleryRef = useRef<HTMLInputElement>(null);
@@ -69,12 +87,11 @@ export function UploadFlow() {
   return (
     <div className="space-y-6">
 
-      {/* Upload zone */}
+      {/* ── IDLE: Upload zone ── */}
       {status === "idle" && (
         <>
-          {/* Prescription pad visual */}
           <div
-            className="w-full rounded-2xl border-2 border-dashed px-6 pt-8 pb-6 flex flex-col items-center gap-3 text-center"
+            className="w-full rounded-2xl border-2 border-dashed px-6 pt-8 pb-6 flex flex-col items-center gap-3 text-center animate-border-pulse"
             style={{
               backgroundColor: "var(--color-paper-deep)",
               borderColor: "var(--color-hairline)",
@@ -82,12 +99,14 @@ export function UploadFlow() {
                 "repeating-linear-gradient(to bottom, transparent, transparent 31px, var(--color-hairline) 31px, var(--color-hairline) 32px)",
             }}
           >
+            {/* Floating icon */}
             <div
-              className="w-14 h-14 rounded-full flex items-center justify-center text-2xl"
+              className="animate-float w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-sm"
               style={{ backgroundColor: "var(--color-mint)" }}
             >
               📄
             </div>
+
             <div>
               <p
                 className="text-lg font-medium"
@@ -100,15 +119,17 @@ export function UploadFlow() {
               </UrduText>
             </div>
 
-            {/* Two action buttons */}
+            {/* Action buttons */}
             <div className="flex gap-3 w-full mt-2">
-              {/* Take Photo — opens rear camera directly */}
+              {/* Take Photo — shimmer effect, opens rear camera on Android */}
               <button
                 type="button"
                 onClick={() => cameraRef.current?.click()}
-                className="flex-1 flex flex-col items-center gap-2 py-4 rounded-xl border transition-colors active:opacity-70"
+                className="flex-1 flex flex-col items-center gap-2 py-4 rounded-xl border active:scale-95 transition-transform duration-100 overflow-hidden relative"
                 style={{
-                  backgroundColor: "var(--color-green)",
+                  background: `linear-gradient(110deg, var(--color-green) 40%, #1a9e80 50%, var(--color-green) 60%)`,
+                  backgroundSize: "200% auto",
+                  animation: "shimmer 2.4s linear infinite",
                   borderColor: "var(--color-green-deep)",
                 }}
               >
@@ -119,11 +140,11 @@ export function UploadFlow() {
                 </UrduText>
               </button>
 
-              {/* Choose from Gallery */}
+              {/* Gallery */}
               <button
                 type="button"
                 onClick={() => galleryRef.current?.click()}
-                className="flex-1 flex flex-col items-center gap-2 py-4 rounded-xl border transition-colors active:opacity-70"
+                className="flex-1 flex flex-col items-center gap-2 py-4 rounded-xl border active:scale-95 transition-transform duration-100"
                 style={{
                   backgroundColor: "var(--color-paper)",
                   borderColor: "var(--color-hairline)",
@@ -140,61 +161,64 @@ export function UploadFlow() {
             </div>
           </div>
 
-          {/* Camera input — capture="environment" opens rear camera directly on Android */}
           <input
             ref={cameraRef}
             type="file"
             accept="image/*"
             capture="environment"
             className="hidden"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) handleFile(file);
-            }}
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
           />
-
-          {/* Gallery input — no capture attribute, opens file picker / gallery */}
           <input
             ref={galleryRef}
             type="file"
             accept="image/*"
             className="hidden"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) handleFile(file);
-            }}
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
           />
         </>
       )}
 
-      {/* Loading */}
+      {/* ── LOADING: Scan animation ── */}
       {status === "loading" && (
-        <div className="flex flex-col items-center gap-4 py-16">
+        <div className="flex flex-col items-center gap-5 py-12">
           {preview && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={preview}
-              alt="Your prescription"
-              className="w-32 h-32 object-cover rounded-xl opacity-60"
-              style={{ border: `1px solid var(--color-hairline)` }}
-            />
+            <div className="relative w-40 h-40 rounded-2xl overflow-hidden shadow-md"
+              style={{ border: `1px solid var(--color-hairline)` }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={preview}
+                alt="Your prescription"
+                className="w-full h-full object-cover"
+              />
+              {/* Scan line */}
+              <div
+                className="absolute left-0 right-0 h-0.5 pointer-events-none"
+                style={{
+                  background: `linear-gradient(90deg, transparent, var(--color-green), transparent)`,
+                  animation: "scanDown 1.6s ease-in-out infinite",
+                  top: 0,
+                }}
+              />
+              {/* Dim overlay */}
+              <div className="absolute inset-0" style={{ backgroundColor: "rgba(14,110,92,0.08)" }} />
+            </div>
           )}
-          <div
-            className="w-8 h-8 rounded-full border-2 animate-spin"
-            style={{ borderColor: "var(--color-green)", borderTopColor: "transparent" }}
-          />
-          <p className="text-sm" style={{ color: "var(--color-ink-soft)" }}>
-            Reading your prescription…
-          </p>
-          <UrduText as="p" className="text-base" style={{ color: "var(--color-ink-soft)" }}>
-            پرچی پڑھی جا رہی ہے…
-          </UrduText>
+
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-sm font-medium flex items-center gap-2" style={{ color: "var(--color-ink)" }}>
+              Reading your prescription <LoadingDots />
+            </p>
+            <UrduText as="p" className="text-base" style={{ color: "var(--color-ink-soft)" }}>
+              پرچی پڑھی جا رہی ہے…
+            </UrduText>
+          </div>
         </div>
       )}
 
-      {/* Error */}
+      {/* ── ERROR ── */}
       {status === "error" && (
-        <div className="space-y-4">
+        <div className="space-y-4 animate-slide-up">
           <div
             className="rounded-xl border px-4 py-4"
             style={{ backgroundColor: "#FDF2F1", borderColor: "var(--color-coral)" }}
@@ -208,7 +232,7 @@ export function UploadFlow() {
           </div>
           <button
             onClick={reset}
-            className="w-full py-3 rounded-xl text-sm font-medium"
+            className="w-full py-3 rounded-xl text-sm font-medium active:scale-95 transition-transform duration-100"
             style={{ backgroundColor: "var(--color-green)", color: "#fff" }}
           >
             Try again
@@ -216,11 +240,12 @@ export function UploadFlow() {
         </div>
       )}
 
-      {/* Results */}
+      {/* ── RESULTS ── */}
       {status === "done" && medicines.length > 0 && (
         <div className="space-y-4">
+          {/* Summary row */}
           {preview && (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 animate-slide-up">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={preview}
@@ -229,10 +254,8 @@ export function UploadFlow() {
                 style={{ border: `1px solid var(--color-hairline)` }}
               />
               <div>
-                <p
-                  className="text-base font-medium"
-                  style={{ fontFamily: "var(--font-display)", color: "var(--color-ink)" }}
-                >
+                <p className="text-base font-medium"
+                  style={{ fontFamily: "var(--font-display)", color: "var(--color-ink)" }}>
                   {medicines.length} medicine{medicines.length !== 1 ? "s" : ""} found
                 </p>
                 <UrduText as="p" className="text-sm" style={{ color: "var(--color-ink-soft)" }}>
@@ -242,25 +265,46 @@ export function UploadFlow() {
             </div>
           )}
 
+          {/* Staggered medicine cards */}
           {medicines.map((m, i) => (
-            <MedicineCard key={i} entry={m} />
+            <div
+              key={i}
+              className="animate-slide-up"
+              style={{ animationDelay: `${i * 120}ms` }}
+            >
+              <MedicineCard entry={m} />
+            </div>
           ))}
 
+          {/* CTA — pulsing ring behind the box */}
           <div
-            className="rounded-xl border px-4 py-4 text-center"
-            style={{ backgroundColor: "var(--color-mint)", borderColor: "var(--color-hairline)" }}
+            className="animate-slide-up relative rounded-xl border px-4 py-4 text-center overflow-hidden"
+            style={{
+              animationDelay: `${medicines.length * 120 + 80}ms`,
+              backgroundColor: "var(--color-mint)",
+              borderColor: "var(--color-hairline)",
+            }}
           >
-            <p className="text-sm font-semibold" style={{ color: "var(--color-green-deep)" }}>
+            {/* Pulse ring decoration */}
+            <span
+              className="absolute inset-0 rounded-xl pointer-events-none"
+              style={{
+                border: `2px solid var(--color-green)`,
+                animation: "pulseRing 2s ease-out infinite",
+                opacity: 0,
+              }}
+            />
+            <p className="text-sm font-semibold relative" style={{ color: "var(--color-green-deep)" }}>
               Always confirm with your pharmacist or doctor
             </p>
-            <UrduText as="p" className="text-sm mt-1" style={{ color: "var(--color-green-deep)" }}>
+            <UrduText as="p" className="text-sm mt-1 relative" style={{ color: "var(--color-green-deep)" }}>
               ہمیشہ اپنے فارماسسٹ یا ڈاکٹر سے تصدیق کریں
             </UrduText>
           </div>
 
           <button
             onClick={reset}
-            className="w-full py-3 rounded-xl text-sm font-medium border"
+            className="w-full py-3 rounded-xl text-sm font-medium border active:scale-95 transition-transform duration-100"
             style={{
               borderColor: "var(--color-hairline)",
               color: "var(--color-ink-soft)",
@@ -272,9 +316,9 @@ export function UploadFlow() {
         </div>
       )}
 
-      {/* No medicines found */}
+      {/* ── NO MEDICINES FOUND ── */}
       {status === "done" && medicines.length === 0 && (
-        <div className="space-y-4">
+        <div className="space-y-4 animate-slide-up">
           <div
             className="rounded-xl border px-4 py-4"
             style={{ backgroundColor: "var(--color-paper-deep)", borderColor: "var(--color-hairline)" }}
@@ -288,7 +332,7 @@ export function UploadFlow() {
           </div>
           <button
             onClick={reset}
-            className="w-full py-3 rounded-xl text-sm font-medium"
+            className="w-full py-3 rounded-xl text-sm font-medium active:scale-95 transition-transform duration-100"
             style={{ backgroundColor: "var(--color-green)", color: "#fff" }}
           >
             Try again
