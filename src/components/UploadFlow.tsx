@@ -27,7 +27,8 @@ async function compressImage(file: File, maxPx = 1600): Promise<Blob> {
 }
 
 export function UploadFlow() {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
+  const galleryRef = useRef<HTMLInputElement>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [preview, setPreview] = useState<string | null>(null);
   const [medicines, setMedicines] = useState<MedicineEntry[]>([]);
@@ -61,7 +62,8 @@ export function UploadFlow() {
     setPreview(null);
     setMedicines([]);
     setErrorMsg("");
-    if (inputRef.current) inputRef.current.value = "";
+    if (cameraRef.current) cameraRef.current.value = "";
+    if (galleryRef.current) galleryRef.current.value = "";
   }
 
   return (
@@ -70,10 +72,9 @@ export function UploadFlow() {
       {/* Upload zone */}
       {status === "idle" && (
         <>
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            className="w-full rounded-2xl border-2 border-dashed min-h-56 flex flex-col items-center justify-center gap-4 px-6 text-center transition-colors active:opacity-80"
+          {/* Prescription pad visual */}
+          <div
+            className="w-full rounded-2xl border-2 border-dashed px-6 pt-8 pb-6 flex flex-col items-center gap-3 text-center"
             style={{
               backgroundColor: "var(--color-paper-deep)",
               borderColor: "var(--color-hairline)",
@@ -92,22 +93,71 @@ export function UploadFlow() {
                 className="text-lg font-medium"
                 style={{ fontFamily: "var(--font-display)", color: "var(--color-ink)" }}
               >
-                Tap to photograph your prescription
+                Upload your prescription
               </p>
               <UrduText as="p" className="text-base mt-1" style={{ color: "var(--color-ink-soft)" }}>
-                پرچی کی تصویر لیں
+                اپنی پرچی اپ لوڈ کریں
               </UrduText>
             </div>
-            <p className="text-xs" style={{ color: "var(--color-ink-soft)" }}>
-              or choose from gallery
-            </p>
-          </button>
 
+            {/* Two action buttons */}
+            <div className="flex gap-3 w-full mt-2">
+              {/* Take Photo — opens rear camera directly */}
+              <button
+                type="button"
+                onClick={() => cameraRef.current?.click()}
+                className="flex-1 flex flex-col items-center gap-2 py-4 rounded-xl border transition-colors active:opacity-70"
+                style={{
+                  backgroundColor: "var(--color-green)",
+                  borderColor: "var(--color-green-deep)",
+                }}
+              >
+                <span className="text-2xl">📷</span>
+                <span className="text-sm font-semibold text-white">Take Photo</span>
+                <UrduText as="span" className="text-xs text-white opacity-90">
+                  تصویر لیں
+                </UrduText>
+              </button>
+
+              {/* Choose from Gallery */}
+              <button
+                type="button"
+                onClick={() => galleryRef.current?.click()}
+                className="flex-1 flex flex-col items-center gap-2 py-4 rounded-xl border transition-colors active:opacity-70"
+                style={{
+                  backgroundColor: "var(--color-paper)",
+                  borderColor: "var(--color-hairline)",
+                }}
+              >
+                <span className="text-2xl">🖼️</span>
+                <span className="text-sm font-semibold" style={{ color: "var(--color-ink)" }}>
+                  Gallery
+                </span>
+                <UrduText as="span" className="text-xs" style={{ color: "var(--color-ink-soft)" }}>
+                  گیلری سے چنیں
+                </UrduText>
+              </button>
+            </div>
+          </div>
+
+          {/* Camera input — capture="environment" opens rear camera directly on Android */}
           <input
-            ref={inputRef}
+            ref={cameraRef}
             type="file"
             accept="image/*"
             capture="environment"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) handleFile(file);
+            }}
+          />
+
+          {/* Gallery input — no capture attribute, opens file picker / gallery */}
+          <input
+            ref={galleryRef}
+            type="file"
+            accept="image/*"
             className="hidden"
             onChange={(e) => {
               const file = e.target.files?.[0];
