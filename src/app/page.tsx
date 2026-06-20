@@ -1,98 +1,12 @@
 import Link from "next/link";
 import { UrduText } from "@/components/UrduText";
 import { StorySection } from "@/components/StorySection";
-
-/* ── Hero visual: a fanned stack of medicine result cards ── */
-function HeroCard() {
-  return (
-    <div className="relative w-72 h-64 mx-auto select-none" aria-hidden>
-      {/* Back cards — fanned */}
-      <div
-        className="absolute inset-0 rounded-2xl border"
-        style={{
-          backgroundColor: "var(--color-paper-deep)",
-          borderColor: "var(--color-hairline)",
-          transform: "rotate(-6deg) translateY(8px)",
-          opacity: 0.5,
-        }}
-      />
-      <div
-        className="absolute inset-0 rounded-2xl border"
-        style={{
-          backgroundColor: "var(--color-paper-deep)",
-          borderColor: "var(--color-hairline)",
-          transform: "rotate(-3deg) translateY(4px)",
-          opacity: 0.75,
-        }}
-      />
-
-      {/* Main card — floats */}
-      <div
-        className="animate-float absolute inset-0 rounded-2xl border p-4 flex flex-col gap-3 shadow-lg"
-        style={{
-          backgroundColor: "var(--color-paper)",
-          borderColor: "var(--color-hairline)",
-        }}
-      >
-        {/* Rx badge */}
-        <div className="flex items-center justify-between">
-          <span
-            className="text-sm font-bold tracking-widest uppercase"
-            style={{ fontFamily: "var(--font-mono)", color: "var(--color-green)" }}
-          >
-            ℞ Prescription
-          </span>
-          <span
-            className="text-xs px-2 py-0.5 rounded-full font-medium"
-            style={{ backgroundColor: "var(--color-mint)", color: "var(--color-green-deep)" }}
-          >
-            ● Identified
-          </span>
-        </div>
-
-        <hr style={{ borderColor: "var(--color-hairline)" }} />
-
-        {/* Medicine row 1 */}
-        <div>
-          <p style={{ fontFamily: "var(--font-mono)", color: "var(--color-green)", fontSize: "0.85rem" }}>
-            Amox 500mg
-          </p>
-          <p className="text-xs mt-0.5 leading-relaxed" style={{ color: "var(--color-ink)" }}>
-            An antibiotic generally used to treat bacterial infections.
-          </p>
-          <UrduText as="p" className="text-xs mt-1 leading-loose" style={{ color: "var(--color-ink-soft)" }}>
-            یہ جراثیم کے انفیکشن کے علاج کے لیے استعمال ہوتی ہے۔
-          </UrduText>
-        </div>
-
-        <hr style={{ borderColor: "var(--color-hairline)" }} />
-
-        {/* Medicine row 2 — low confidence */}
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <p style={{ fontFamily: "var(--font-mono)", color: "var(--color-amber-text)", fontSize: "0.85rem" }}>
-              Tab Panadol
-            </p>
-            <p className="text-xs mt-0.5" style={{ color: "var(--color-ink-soft)" }}>
-              Generally used for pain and fever relief.
-            </p>
-          </div>
-          <span
-            className="text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0"
-            style={{ backgroundColor: "var(--color-amber-surface)", color: "var(--color-amber-text)" }}
-          >
-            Low
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { HeroDemo } from "@/components/HeroDemo";
 
 /* ── Step chip ── */
 function Step({ n, icon, title, urdu }: { n: number; icon: string; title: string; urdu: string }) {
   return (
-    <div className="flex flex-col items-center text-center gap-2 animate-slide-up">
+    <div className="flex flex-col items-center text-center gap-2">
       <div
         className="w-12 h-12 rounded-full flex items-center justify-center text-xl relative"
         style={{ backgroundColor: "var(--color-mint)" }}
@@ -117,7 +31,7 @@ function Step({ n, icon, title, urdu }: { n: number; icon: string; title: string
 function Feature({ icon, text, urdu }: { icon: string; text: string; urdu: string }) {
   return (
     <div
-      className="flex items-start gap-3 rounded-xl p-3 border animate-slide-up"
+      className="flex items-start gap-3 rounded-xl p-3 border"
       style={{ backgroundColor: "var(--color-paper-deep)", borderColor: "var(--color-hairline)" }}
     >
       <span className="text-xl flex-shrink-0">{icon}</span>
@@ -135,55 +49,71 @@ export default function LandingPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 overflow-x-hidden">
 
-      {/* ══ HERO ══ */}
-      <section className="pt-10 pb-12 flex flex-col items-center text-center gap-8">
+      {/* ══════════════════════════════════════
+          HERO — emotional hook + live demo
+      ══════════════════════════════════════ */}
+      <section className="pt-8 pb-10 space-y-6">
 
-        {/* Animated card visual */}
-        <div className="animate-slide-up w-full">
-          <HeroCard />
-        </div>
+        {/* Hook headline — leads with the fear */}
+        <div className="text-center space-y-2 animate-slide-up">
+          {/* Urgency pill */}
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold mb-1"
+            style={{ backgroundColor: "#FEF3C7", color: "#B45309" }}>
+            <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+            کیا آپ یقین سے جانتے ہیں؟
+          </div>
 
-        {/* Headline */}
-        <div className="space-y-3 animate-slide-up delay-100">
           <h1
-            className="text-4xl leading-tight"
+            className="text-4xl leading-tight tracking-tight"
             style={{ fontFamily: "var(--font-display)", color: "var(--color-ink)" }}
           >
-            Your prescription,{" "}
-            <span style={{ color: "var(--color-green)" }}>explained.</span>
+            Can you read{" "}
+            <span
+              className="relative inline-block"
+              style={{ color: "var(--color-coral)" }}
+            >
+              this?
+              {/* Underline squiggle */}
+              <svg className="absolute -bottom-1 left-0 w-full" height="6" viewBox="0 0 80 6" preserveAspectRatio="none">
+                <path d="M0 4 Q10 1 20 4 Q30 7 40 4 Q50 1 60 4 Q70 7 80 4"
+                  fill="none" stroke="var(--color-coral)" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </span>
           </h1>
-          <UrduText as="p" className="text-2xl leading-loose" style={{ color: "var(--color-ink)" }}>
-            آپ کی پرچی، آسان زبان میں
-          </UrduText>
-          <p className="text-base leading-relaxed max-w-sm mx-auto" style={{ color: "var(--color-ink-soft)" }}>
-            Photograph your handwritten prescription. Parchi reads it and tells you what each medicine is generally used for — in English and Urdu.
+
+          <p className="text-base leading-relaxed" style={{ color: "var(--color-ink-soft)" }}>
+            Doctors' handwriting is impossible to read — and the wrong medicine can be dangerous.
+            <strong style={{ color: "var(--color-ink)" }}> Parchi reads your prescription for you.</strong>
           </p>
+          <UrduText as="p" className="text-lg leading-loose" style={{ color: "var(--color-ink)" }}>
+            پرچی آپ کی دوائیاں سمجھنے میں مدد کرتی ہے
+          </UrduText>
         </div>
 
-        {/* CTAs */}
-        <div className="flex flex-col gap-3 w-full max-w-xs animate-slide-up delay-200">
+        {/* Live demo — animates on its own */}
+        <div className="animate-slide-up delay-100">
+          <HeroDemo />
+        </div>
+
+        {/* CTA — below the demo so users have already seen the value */}
+        <div className="flex flex-col items-center gap-3 animate-slide-up delay-200">
           <Link
             href="/scan"
-            className="flex items-center justify-center gap-2 py-4 rounded-2xl text-base font-semibold text-white transition-transform active:scale-95"
+            className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl text-lg font-bold text-white transition-transform active:scale-95 shadow-lg"
             style={{
-              background: `linear-gradient(110deg, var(--color-green) 40%, #1a9e80 55%, var(--color-green) 70%)`,
-              backgroundSize: "200% auto",
-              animation: "shimmer 2.4s linear infinite",
+              background: "linear-gradient(135deg, var(--color-green) 0%, #1a9e80 50%, var(--color-green-deep) 100%)",
+              boxShadow: "0 4px 24px rgba(14,110,92,0.35)",
             }}
           >
-            <span>📷</span> Scan your prescription
+            📷 Scan your prescription — free
           </Link>
-          <Link href="/scan" style={{ color: "var(--color-green)" }}>
-            <UrduText as="span" className="text-center text-base py-2 leading-loose">
-              پرچی اسکین کریں ←
-            </UrduText>
-          </Link>
+          <UrduText as="p" className="text-base leading-loose" style={{ color: "var(--color-green)" }}>
+            <Link href="/scan">ابھی پرچی اسکین کریں ←</Link>
+          </UrduText>
+          <p className="text-xs" style={{ color: "var(--color-ink-soft)" }}>
+            No signup · Instant · Works in Urdu · Powered by Google AI
+          </p>
         </div>
-
-        {/* Trust badge */}
-        <p className="text-xs animate-slide-up delay-300" style={{ color: "var(--color-ink-soft)" }}>
-          Free · No signup · Works in Urdu · Powered by Google AI
-        </p>
       </section>
 
       {/* ══ DIVIDER ══ */}
@@ -197,32 +127,23 @@ export default function LandingPage() {
 
       {/* ══ HOW IT WORKS ══ */}
       <section className="py-12 space-y-8">
-        <div className="text-center space-y-1 animate-slide-up">
-          <h2
-            className="text-2xl"
-            style={{ fontFamily: "var(--font-display)", color: "var(--color-ink)" }}
-          >
+        <div className="text-center space-y-1">
+          <h2 className="text-2xl" style={{ fontFamily: "var(--font-display)", color: "var(--color-ink)" }}>
             How it works
           </h2>
           <UrduText as="p" className="text-base leading-loose" style={{ color: "var(--color-ink-soft)" }}>
             کیسے کام کرتا ہے
           </UrduText>
         </div>
-
         <div className="grid grid-cols-3 gap-4">
           <Step n={1} icon="📷" title="Photograph" urdu="تصویر لیں" />
           <Step n={2} icon="🤖" title="AI reads it" urdu="AI پڑھتا ہے" />
           <Step n={3} icon="📖" title="Understand" urdu="سمجھیں" />
         </div>
-
-        {/* Connector line between steps */}
-        <div className="relative -mt-2 px-8">
-          <div
-            className="h-px"
-            style={{
-              background: `linear-gradient(to right, var(--color-mint), var(--color-green), var(--color-mint))`,
-            }}
-          />
+        <div className="px-8">
+          <div className="h-px" style={{
+            background: "linear-gradient(to right, var(--color-mint), var(--color-green), var(--color-mint))"
+          }} />
         </div>
       </section>
 
@@ -231,18 +152,14 @@ export default function LandingPage() {
 
       {/* ══ FEATURES ══ */}
       <section className="py-12 space-y-6">
-        <div className="text-center space-y-1 animate-slide-up">
-          <h2
-            className="text-2xl"
-            style={{ fontFamily: "var(--font-display)", color: "var(--color-ink)" }}
-          >
+        <div className="text-center space-y-1">
+          <h2 className="text-2xl" style={{ fontFamily: "var(--font-display)", color: "var(--color-ink)" }}>
             Built for Pakistan
           </h2>
           <UrduText as="p" className="text-base leading-loose" style={{ color: "var(--color-ink-soft)" }}>
             پاکستانیوں کے لیے بنایا گیا
           </UrduText>
         </div>
-
         <div className="grid grid-cols-2 gap-3">
           <Feature icon="🇵🇰" text="Urdu + English" urdu="اردو اور انگریزی" />
           <Feature icon="⚡" text="Instant results" urdu="فوری نتائج" />
@@ -254,51 +171,8 @@ export default function LandingPage() {
       {/* ══ DIVIDER ══ */}
       <hr style={{ borderColor: "var(--color-hairline)" }} />
 
-      {/* ══ SAMPLE CARD ══ */}
-      <section className="py-12 space-y-4 animate-slide-up">
-        <div className="text-center space-y-1">
-          <h2
-            className="text-2xl"
-            style={{ fontFamily: "var(--font-display)", color: "var(--color-ink)" }}
-          >
-            What you'll see
-          </h2>
-          <UrduText as="p" className="text-base leading-loose" style={{ color: "var(--color-ink-soft)" }}>
-            آپ کو کیا نظر آئے گا
-          </UrduText>
-        </div>
-
-        {/* Sample result card */}
-        <div
-          className="rounded-2xl border p-4 space-y-3"
-          style={{ backgroundColor: "var(--color-paper-deep)", borderColor: "var(--color-hairline)" }}
-        >
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p style={{ fontFamily: "var(--font-mono)", color: "var(--color-green)", fontSize: "1rem" }}>
-                Augmentin 625mg
-              </p>
-              <p className="text-sm mt-0.5" style={{ color: "var(--color-ink-soft)" }}>Amoxicillin / Clavulanate</p>
-            </div>
-            <span
-              className="text-xs px-2.5 py-0.5 rounded-full font-medium flex-shrink-0"
-              style={{ backgroundColor: "var(--color-mint)", color: "var(--color-green-deep)" }}
-            >
-              ● Identified
-            </span>
-          </div>
-          <hr style={{ borderColor: "var(--color-hairline)" }} />
-          <p className="text-sm leading-relaxed" style={{ color: "var(--color-ink)" }}>
-            A combination antibiotic generally used to treat bacterial infections of the ear, lungs, sinuses, and urinary tract.
-          </p>
-          <UrduText as="p" className="text-base leading-loose" style={{ color: "var(--color-ink)" }}>
-            یہ ایک مرکب اینٹی بائیوٹک ہے جو عام طور پر کان، پھیپھڑوں، سینوس اور پیشاب کی نالی کے جراثیمی انفیکشن کے علاج میں استعمال ہوتی ہے۔
-          </UrduText>
-        </div>
-      </section>
-
       {/* ══ SAFETY ══ */}
-      <section className="py-6 animate-slide-up">
+      <section className="py-8">
         <div
           className="rounded-2xl border px-5 py-5 space-y-2"
           style={{
@@ -308,11 +182,10 @@ export default function LandingPage() {
             borderLeftColor: "var(--color-coral)",
           }}
         >
-          <p className="text-sm font-bold" style={{ color: "var(--color-coral)" }}>
-            ⚠ Not medical advice
-          </p>
+          <p className="text-sm font-bold" style={{ color: "var(--color-coral)" }}>⚠ Not medical advice</p>
           <p className="text-sm leading-relaxed" style={{ color: "var(--color-ink-soft)" }}>
-            Parchi explains what medicines are <em>generally used for</em>. It never tells you to take, change, or stop any medicine. Always confirm with your pharmacist or doctor.
+            Parchi explains what medicines are <em>generally used for</em>. It never tells you to take, change,
+            or stop any medicine. Always confirm with your pharmacist or doctor.
           </p>
           <UrduText as="p" className="text-sm leading-loose" style={{ color: "var(--color-ink-soft)" }}>
             پرچی صرف دوائیوں کا عام استعمال بتاتی ہے — یہ طبی مشورہ نہیں ہے۔ ہمیشہ اپنے فارماسسٹ یا ڈاکٹر سے تصدیق کریں۔
@@ -321,7 +194,7 @@ export default function LandingPage() {
       </section>
 
       {/* ══ FINAL CTA ══ */}
-      <section className="py-12 flex flex-col items-center text-center gap-6 animate-slide-up">
+      <section className="py-12 flex flex-col items-center text-center gap-5">
         <h2
           className="text-3xl leading-snug"
           style={{ fontFamily: "var(--font-display)", color: "var(--color-ink)" }}
@@ -333,8 +206,11 @@ export default function LandingPage() {
         </UrduText>
         <Link
           href="/scan"
-          className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-base font-semibold text-white transition-transform active:scale-95"
-          style={{ backgroundColor: "var(--color-green)" }}
+          className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-base font-bold text-white transition-transform active:scale-95 shadow-lg"
+          style={{
+            background: "linear-gradient(135deg, var(--color-green) 0%, #1a9e80 50%, var(--color-green-deep) 100%)",
+            boxShadow: "0 4px 24px rgba(14,110,92,0.35)",
+          }}
         >
           📷 Scan now — it&apos;s free
         </Link>
