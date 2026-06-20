@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
 import type { MedicineEntry } from "@/types/medicine";
+import { supabaseAdmin } from "@/lib/supabase";
 
 const SYSTEM_PROMPT = `You are a prescription-reading assistant. Your only job is to read a handwritten doctor's prescription image and return a JSON array describing each medicine listed.
 
@@ -35,6 +36,16 @@ function extractJSON(text: string): MedicineEntry[] {
   return JSON.parse(cleaned.slice(start, end + 1));
 }
 
+async function savePrescription(medicines: MedicineEntry[]) {
+  const { error } = await supabaseAdmin.from("prescriptions").insert({
+    medicines,
+    medicine_count: medicines.length,
+    has_low_confidence: medicines.some((m) => m.confidence === "low"),
+    has_unreadable: medicines.some((m) => m.confidence === "unreadable"),
+  });
+  if (error) console.error("Supabase insert error:", error.message);
+}
+
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
@@ -63,6 +74,9 @@ export async function POST(req: NextRequest) {
 
     const text = result.response.text();
     const medicines = extractJSON(text);
+
+    // Save to Supabase — fire and forget, never blocks the response
+    savePrescription(medicines).catch(() => {});
 
     return NextResponse.json({ medicines });
   } catch (err) {
