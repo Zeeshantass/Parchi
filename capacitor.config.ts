@@ -6,7 +6,7 @@ const config: CapacitorConfig = {
   webDir: "out",
   server: {
     // Load the live Vercel deployment — API routes and Supabase work here
-    url: "https://parchi-e25csp0qj-zeeshansaleems-projects.vercel.app",
+    url: "https://parchipk.netlify.app",
     cleartext: false,
   },
   android: {
