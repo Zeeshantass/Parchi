@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { UrduText } from "@/components/UrduText";
+import { StorySection } from "@/components/StorySection";
 
 /* ── Hero visual: a fanned stack of medicine result cards ── */
 function HeroCard() {
@@ -184,6 +185,12 @@ export default function LandingPage() {
           Free · No signup · Works in Urdu · Powered by Google AI
         </p>
       </section>
+
+      {/* ══ DIVIDER ══ */}
+      <hr style={{ borderColor: "var(--color-hairline)" }} />
+
+      {/* ══ STORY / CHARACTERS ══ */}
+      <StorySection />
 
       {/* ══ DIVIDER ══ */}
       <hr style={{ borderColor: "var(--color-hairline)" }} />
