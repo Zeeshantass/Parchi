@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter, Noto_Nastaliq_Urdu, Spline_Sans_Mono } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -78,25 +79,36 @@ export default function RootLayout({
           }}
         >
           <div className="max-w-2xl mx-auto px-4 h-14 flex items-center gap-2">
-            <span
-              className="text-xl tracking-tight"
-              style={{ fontFamily: "var(--font-display)", color: "var(--color-green)" }}
+            <Link href="/" className="flex items-center gap-2 flex-1">
+              <span
+                className="text-xl tracking-tight"
+                style={{ fontFamily: "var(--font-display)", color: "var(--color-green)" }}
+              >
+                ℞
+              </span>
+              <span
+                className="text-lg font-semibold tracking-tight"
+                style={{ fontFamily: "var(--font-display)", color: "var(--color-ink)" }}
+              >
+                Parchi
+              </span>
+              <span
+                className="text-sm ml-1"
+                style={{ fontFamily: "var(--font-urdu)", color: "var(--color-ink-soft)" }}
+                dir="rtl"
+              >
+                پرچی
+              </span>
+            </Link>
+
+            {/* Scan CTA in header */}
+            <Link
+              href="/scan"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold text-white transition-transform active:scale-95"
+              style={{ backgroundColor: "var(--color-green)" }}
             >
-              ℞
-            </span>
-            <span
-              className="text-lg font-semibold tracking-tight"
-              style={{ fontFamily: "var(--font-display)", color: "var(--color-ink)" }}
-            >
-              Parchi
-            </span>
-            <span
-              className="text-sm ml-1"
-              style={{ fontFamily: "var(--font-urdu)", color: "var(--color-ink-soft)" }}
-              dir="rtl"
-            >
-              پرچی
-            </span>
+              <span>📷</span> Scan
+            </Link>
           </div>
         </header>
 
